@@ -8,447 +8,389 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:#0d0f14; --surface:#13161e; --surface2:#1a1e2a; --surface3:#222636;
-    --border:#2a2f3f; --border2:#353c52;
-    --accent:#4f7cff; --accent2:#7b5ea7; --accent3:#28c98f; --accent4:#f4a442;
-    --danger:#ff4f6b; --text:#e4e8f5; --text2:#9aa3bc; --text3:#5c6480;
-    --mono:'IBM Plex Mono',monospace; --sans:'IBM Plex Sans',sans-serif;
+    --bg:#0d0f14;--surface:#13161e;--surface2:#1a1e2a;--surface3:#222636;
+    --border:#2a2f3f;--border2:#353c52;--accent:#4f7cff;--accent2:#7b5ea7;
+    --accent3:#28c98f;--accent4:#f4a442;--danger:#ff4f6b;
+    --text:#e4e8f5;--text2:#9aa3bc;--text3:#5c6480;
+    --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;min-height:100vh;display:flex;flex-direction:column;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;line-height:1.5;min-height:100vh;display:flex;flex-direction:column;}
 
-  /* HEADER */
-  header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:16px;height:56px;position:sticky;top:0;z-index:100;}
-  .logo{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;}
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:14px;height:56px;position:sticky;top:0;z-index:100;}
+  .logo{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;}
   .logo span{color:var(--text3);}
-  .header-right{display:flex;gap:10px;margin-left:auto;align-items:center;}
-  .status-msg{font-family:var(--mono);font-size:11px;color:var(--text3);}
-  .status-msg.ok{color:var(--accent3);}
-  .status-msg.err{color:var(--danger);}
+  .back-btn{background:none;border:1px solid var(--border2);border-radius:5px;padding:5px 12px;color:var(--text2);font-size:11px;font-family:var(--sans);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;}
+  .back-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .header-right{margin-left:auto;display:flex;gap:10px;align-items:center;}
+  .change-badge{font-family:var(--mono);font-size:10px;color:var(--accent4);background:rgba(244,164,66,.1);border:1px solid rgba(244,164,66,.2);border-radius:4px;padding:2px 8px;}
+  .dl-btn{background:var(--accent3);border:none;border-radius:6px;padding:7px 16px;color:#0d0f14;font-size:12px;font-weight:700;font-family:var(--sans);cursor:pointer;transition:opacity .15s;display:flex;align-items:center;gap:6px;}
+  .dl-btn:hover{opacity:.88;}
+  .dl-btn:disabled{opacity:.4;cursor:not-allowed;}
 
-  .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;font-family:var(--sans);cursor:pointer;border:none;transition:opacity .15s,background .15s;}
-  .btn:hover{opacity:.88;}
-  .btn:disabled{opacity:.35;cursor:not-allowed;}
-  .btn-primary{background:var(--accent);color:#fff;}
-  .btn-success{background:var(--accent3);color:#0d1a13;}
-  .btn-ghost{background:none;color:var(--text2);border:1px solid var(--border2);}
-  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);opacity:1;}
-  .btn-danger{background:none;color:var(--danger);border:1px solid rgba(255,79,107,.3);}
-  .btn-danger:hover{background:rgba(255,79,107,.08);opacity:1;}
-
-  /* LAYOUT */
-  main{flex:1;padding:28px 32px;display:flex;flex-direction:column;gap:32px;}
-
-  /* UPLOAD PROMPT */
-  #upload-prompt{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:16px;min-height:60vh;}
-  .upload-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:40px;max-width:480px;width:100%;text-align:center;}
-  .upload-title{font-size:18px;font-weight:700;margin-bottom:8px;}
-  .upload-sub{color:var(--text3);font-size:12px;margin-bottom:24px;line-height:1.6;}
-  .drop-zone{border:2px dashed var(--border2);border-radius:10px;padding:28px;cursor:pointer;transition:all .2s;position:relative;margin-bottom:16px;}
+  /* UPLOAD */
+  #upload-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;}
+  .ucard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:40px;max-width:460px;width:100%;text-align:center;}
+  .ucard h2{font-size:18px;font-weight:700;margin-bottom:8px;}
+  .ucard p{color:var(--text3);font-size:13px;margin-bottom:24px;}
+  .drop-zone{border:2px dashed var(--border2);border-radius:10px;padding:28px;cursor:pointer;transition:all .2s;position:relative;margin-bottom:14px;}
   .drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent);background:rgba(79,124,255,.04);}
   .drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-  .drop-zone-text{color:var(--text2);font-size:13px;pointer-events:none;}
-  .drop-zone-text strong{color:var(--accent);}
-  .drop-hint{margin-top:6px;font-size:11px;color:var(--text3);font-family:var(--mono);pointer-events:none;}
-  .file-chosen{font-family:var(--mono);font-size:11px;color:var(--accent3);background:rgba(40,201,143,.08);border:1px solid rgba(40,201,143,.2);border-radius:5px;padding:6px 12px;margin-bottom:14px;display:none;}
-  .upload-error{font-size:11px;color:var(--danger);background:rgba(255,79,107,.07);border:1px solid rgba(255,79,107,.2);border-radius:5px;padding:8px 12px;margin-top:10px;display:none;}
+  .dzt{color:var(--text2);font-size:13px;pointer-events:none;}
+  .dzt strong{color:var(--accent);}
+  .dzh{margin-top:5px;font-size:11px;color:var(--text3);font-family:var(--mono);pointer-events:none;}
+  .fname{margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--accent3);background:rgba(40,201,143,.08);border:1px solid rgba(40,201,143,.15);border-radius:5px;padding:5px 12px;display:none;}
+  .load-btn{width:100%;background:var(--accent);border:none;border-radius:7px;padding:11px;color:#fff;font-size:13px;font-weight:600;font-family:var(--sans);cursor:pointer;}
+  .load-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .lerr{margin-top:10px;font-size:12px;color:var(--danger);display:none;}
 
-  /* TABS */
-  #editor-area{display:none;flex-direction:column;gap:0;}
-  .tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:0;}
-  .tab-btn{padding:10px 20px;font-size:12px;font-weight:600;font-family:var(--sans);background:none;border:none;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s;}
+  /* EDITOR */
+  #editor-screen{display:none;flex:1;flex-direction:column;overflow:hidden;height:calc(100vh - 56px);}
+
+  .tab-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 24px;}
+  .tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:13px 18px;font-family:var(--sans);font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;transition:all .15s;white-space:nowrap;}
   .tab-btn:hover{color:var(--text2);}
   .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
-  .tab-count{font-family:var(--mono);font-size:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1px 6px;margin-left:6px;}
+  .tcnt{font-family:var(--mono);font-size:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1px 6px;margin-left:5px;color:var(--text3);}
 
-  /* TABLE SECTION */
-  .sheet-section{display:none;flex-direction:column;gap:12px;padding-top:20px;}
-  .sheet-section.active{display:flex;}
-  .section-toolbar{display:flex;align-items:center;gap:10px;}
-  .section-title{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);}
-  #search-filter{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:5px 10px;color:var(--text);font-size:12px;font-family:var(--sans);outline:none;width:220px;}
-  #search-filter:focus{border-color:var(--accent);}
-  #search-filter::placeholder{color:var(--text3);}
+  .toolbar{padding:9px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);flex-shrink:0;}
+  .add-btn{background:none;border:1px solid var(--border2);border-radius:5px;padding:5px 12px;color:var(--accent3);font-size:11px;font-family:var(--sans);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;}
+  .add-btn:hover{background:rgba(40,201,143,.07);border-color:var(--accent3);}
+  .tsearch{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:5px 10px;color:var(--text);font-size:11px;font-family:var(--sans);outline:none;width:210px;}
+  .tsearch:focus{border-color:var(--accent);}
+  .tsearch::placeholder{color:var(--text3);}
+  .rcnt{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--text3);}
 
-  /* GRID TABLE */
-  .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:8px;max-height:calc(100vh - 240px);}
-  .table-wrap::-webkit-scrollbar{width:5px;height:5px;}
-  .table-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+  .grid-wrap{flex:1;overflow:auto;}
+  .grid-wrap::-webkit-scrollbar{width:5px;height:5px;}
+  .grid-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
 
-  table{border-collapse:collapse;min-width:100%;font-size:12px;}
-  thead{position:sticky;top:0;z-index:10;}
-  thead tr{background:var(--surface2);}
-  th{font-family:var(--mono);font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;border-right:1px solid var(--border);}
-  th:last-child{border-right:none;}
-  th.col-action{width:60px;text-align:center;}
-  tbody tr{background:var(--surface);transition:background .1s;}
-  tbody tr:hover{background:var(--surface2);}
-  tbody tr.new-row{background:rgba(79,124,255,.06);}
-  tbody tr.new-row:hover{background:rgba(79,124,255,.1);}
-  td{padding:0;border-bottom:1px solid var(--border);border-right:1px solid var(--border);vertical-align:middle;}
-  td:last-child{border-right:none;}
-  td.col-action{text-align:center;padding:4px;}
-  tbody tr:last-child td{border-bottom:none;}
-
-  /* EDITABLE CELLS */
-  td input[type=text],td textarea{
-    width:100%;background:transparent;border:none;outline:none;
-    font-size:12px;font-family:var(--sans);color:var(--text);
-    padding:6px 10px;line-height:1.4;resize:none;
-    transition:background .1s;
+  table.grid{border-collapse:collapse;width:max-content;min-width:100%;}
+  table.grid thead{position:sticky;top:0;z-index:5;}
+  table.grid th{
+    background:var(--surface2);border-right:1px solid var(--border);border-bottom:2px solid var(--border2);
+    padding:7px 10px;font-family:var(--mono);font-size:9px;font-weight:600;text-transform:uppercase;
+    letter-spacing:.07em;color:var(--text3);white-space:nowrap;text-align:left;
+    min-width:130px;max-width:240px;user-select:none;
   }
-  td input[type=text]:focus,td textarea:focus{
-    background:rgba(79,124,255,.08);
-    outline:1px solid var(--accent);
-    outline-offset:-1px;
+  table.grid th.act-col{min-width:36px;max-width:36px;width:36px;}
+  table.grid tbody tr:hover{background:rgba(255,255,255,.02);}
+  table.grid tbody tr.modified{background:rgba(244,164,66,.04);}
+  table.grid tbody tr.is-new{background:rgba(40,201,143,.04);}
+  table.grid td{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:0;vertical-align:top;}
+  table.grid td.act-col{text-align:center;padding:4px;vertical-align:middle;}
+
+  textarea.ci{
+    display:block;width:100%;background:transparent;border:none;outline:none;
+    padding:6px 10px;font-size:12px;font-family:var(--sans);color:var(--text);
+    resize:none;overflow:hidden;line-height:1.45;min-height:32px;
   }
-  td textarea{min-height:36px;overflow:hidden;}
+  textarea.ci:focus{background:rgba(79,124,255,.07);box-shadow:inset 0 0 0 1px var(--accent);}
+  textarea.ci.kc{font-family:var(--mono);font-size:10px;color:var(--accent3);}
 
-  .del-btn{background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;border-radius:4px;display:flex;align-items:center;justify-content:center;transition:color .15s,background .15s;}
-  .del-btn:hover{color:var(--danger);background:rgba(255,79,107,.1);}
-
-  .row-num{font-family:var(--mono);font-size:9px;color:var(--text3);padding:0 8px;text-align:right;white-space:nowrap;}
-
-  /* PROGRESS */
-  .progress-bar-wrap{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;display:none;}
-  .progress-bar{height:100%;background:var(--accent);border-radius:2px;width:0;transition:width .3s;}
+  .del-btn{background:none;border:none;color:var(--text3);cursor:pointer;padding:3px 6px;border-radius:3px;font-size:12px;transition:all .15s;}
+  .del-btn:hover{background:rgba(255,79,107,.12);color:var(--danger);}
 </style>
 </head>
 <body>
 
 <header>
+  <button class="back-btn" id="back-btn">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Explorer
+  </button>
   <div class="logo">PM<span>/</span>Editor</div>
   <div class="header-right">
-    <div class="progress-bar-wrap" id="prog-wrap" style="width:120px"><div class="progress-bar" id="prog-bar"></div></div>
-    <span class="status-msg" id="status-msg"></span>
-    <button class="btn btn-ghost" id="back-btn" onclick="window.close()">← Back to Explorer</button>
-    <button class="btn btn-success" id="download-btn" style="display:none" onclick="downloadExcel()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Download Excel
+    <span class="change-badge" id="change-badge" style="display:none"></span>
+    
+    <span id="dl-note" style="display:none;font-family:var(--mono);font-size:10px;color:var(--text3)">You'll be prompted to re-select your file to download</span>
+    <button class="dl-btn" id="dl-btn" disabled>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download Updated Excel
     </button>
   </div>
 </header>
 
-<!-- UPLOAD PROMPT -->
-<main>
-<div id="upload-prompt">
-  <div class="upload-card">
-    <div class="upload-title">Load Product Model</div>
-    <div class="upload-sub">Upload your Excel file to edit Clauses, Terms, and Options. Your changes will be downloadable as an updated Excel file.</div>
+<div id="upload-screen">
+  <div class="ucard">
+    <h2>Load Product Model</h2>
+    <p>Upload your Excel file to edit clauses, terms and options, then download the updated file.</p>
     <div class="drop-zone" id="drop-zone">
       <input type="file" id="file-input" accept=".xlsx,.xls"/>
-      <div class="drop-zone-text"><strong>Click to browse</strong> or drag & drop</div>
-      <div class="drop-hint">.xlsx · max 20 MB</div>
+      <div class="dzt"><strong>Click to browse</strong> or drag & drop</div>
+      <div class="dzh">.xlsx or .xls · max 20 MB</div>
     </div>
-    <div class="file-chosen" id="file-chosen"></div>
-    <button class="btn btn-primary" id="load-btn" style="width:100%" disabled onclick="loadFile()">Select a file to continue</button>
-    <div class="upload-error" id="upload-error"></div>
+    <div class="fname" id="fname"></div>
+    <button class="load-btn" id="load-btn" disabled>Load & Edit</button>
+    <div class="lerr" id="lerr"></div>
   </div>
 </div>
 
-<!-- EDITOR AREA -->
-<div id="editor-area">
+<div id="editor-screen">
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('clauses',this)">Clauses - Small Business <span class="tab-count" id="tc-clauses">0</span></button>
-    <button class="tab-btn" onclick="switchTab('terms',this)">Terms - Small Business <span class="tab-count" id="tc-terms">0</span></button>
-    <button class="tab-btn" onclick="switchTab('options',this)">Options - Small Business <span class="tab-count" id="tc-options">0</span></button>
+    <button class="tab-btn active" data-tab="clauses">Clauses - Small Business <span class="tcnt" id="cnt-clauses">0</span></button>
+    <button class="tab-btn" data-tab="terms">Terms - Small Business <span class="tcnt" id="cnt-terms">0</span></button>
+    <button class="tab-btn" data-tab="options">Options - Small Business <span class="tcnt" id="cnt-options">0</span></button>
+    <button class="tab-btn" data-tab="rules">PM Business Rules <span class="tcnt" id="cnt-rules">0</span></button>
   </div>
-
-  <!-- CLAUSES -->
-  <div class="sheet-section active" id="sec-clauses">
-    <div class="section-toolbar">
-      <span class="section-title">Clauses</span>
-      <input type="text" id="search-filter" placeholder="Filter rows…" oninput="filterRows('clauses',this.value)"/>
-      <button class="btn btn-ghost" style="margin-left:auto" onclick="addRow('clauses')">+ Add Row</button>
-    </div>
-    <div class="table-wrap"><table id="tbl-clauses"><thead></thead><tbody></tbody></table></div>
+  <div class="toolbar">
+    <button class="add-btn" id="add-btn">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Row
+    </button>
+    <input class="tsearch" id="tsearch" placeholder="Filter rows…" autocomplete="off"/>
+    <span class="rcnt" id="rcnt"></span>
   </div>
-
-  <!-- TERMS -->
-  <div class="sheet-section" id="sec-terms">
-    <div class="section-toolbar">
-      <span class="section-title">Terms</span>
-      <input type="text" id="search-filter-terms" placeholder="Filter rows…" oninput="filterRows('terms',this.value)"/>
-      <button class="btn btn-ghost" style="margin-left:auto" onclick="addRow('terms')">+ Add Row</button>
-    </div>
-    <div class="table-wrap"><table id="tbl-terms"><thead></thead><tbody></tbody></table></div>
-  </div>
-
-  <!-- OPTIONS -->
-  <div class="sheet-section" id="sec-options">
-    <div class="section-toolbar">
-      <span class="section-title">Options</span>
-      <input type="text" id="search-filter-options" placeholder="Filter rows…" oninput="filterRows('options',this.value)"/>
-      <button class="btn btn-ghost" style="margin-left:auto" onclick="addRow('options')">+ Add Row</button>
-    </div>
-    <div class="table-wrap"><table id="tbl-options"><thead></thead><tbody></tbody></table></div>
-  </div>
+  <div class="grid-wrap" id="grid-wrap"></div>
 </div>
-</main>
 
 <script>
-// ── Config ──────────────────────────────────────────────────────────────────
-const SHEETS = {
-  clauses: {
-    sheet: "Clauses - Small Business",
-    cols: [
-      "Clause code","Name","Clause Type","Category","Description",
-      "Existence","Covered Party Type","Premium bearing? (as per PM)",
-      "Schedule?","Offering","Business Rules (If Applicable)",
-      "Form Number and Edition (Informational Only)",
-      "State Availbility as per SBT for (MI, NM, NV, KS, AZ, OK)",
-      "Conditional Existence  as per SBT","Effective Date","Expiration Date"
-    ]
-  },
-  terms: {
-    sheet: "Terms - Small Business",
-    cols: [
-      "Related Clause Code","Related Clause Name","Term Code","Term Name",
-      "Term Type","Value Type",
-      "Type of Field (User Entered, Drop Down or Radio Button or Contact or Other - Define Other)",
-      "Required","Schedule?","Default Value","Minimum Value","Maximum Value",
-      "State Availability","Business Rule (If Applicable)",
-      "Effective Date","Expiration Date"
-    ]
-  },
-  options: {
-    sheet: "Options - Small Business",
-    cols: [
-      "Related Clause Term Code","Related Clause Term","Related Clause Name",
-      "Term Code","Option Description (to be displayed)","Term Value",
-      "State Availability","Business Rule","Effective Date","Expiration Date"
-    ]
-  }
+// ── State ──────────────────────────────────────────────────────────────────
+let selectedFile = null;
+let sheets = {};
+let hdrs   = {};
+let dirty  = { clauses: new Set(), terms: new Set(), options: new Set(), rules: new Set() };
+let activeTab = 'clauses';
+let filterQ   = '';
+
+const KEY_COLS = {
+  clauses: ['Clause code'],
+  terms:   ['Term Code', 'Related Clause Code'],
+  options: ['Related Clause Term Code', 'Term Code'],
+  rules:   ['Business Rule Number'],
 };
 
-// State: rowData[sheetKey] = array of {_id, col: value, ...}
-const rowData = { clauses: [], terms: [], options: [] };
-let nextId = 1;
-let selectedFile = null;
+// ── On load: check sessionStorage for already-parsed data ──────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    const stored = sessionStorage.getItem('pmRawSheets');
+    if (stored) {
+      const rawSheets = JSON.parse(stored);
+      loadFromRaw(rawSheets);
+      // Hide upload screen immediately - no file re-upload needed
+      document.getElementById('upload-screen').style.display = 'none';
+      document.getElementById('editor-screen').style.display = 'flex';
+      document.getElementById('dl-btn').disabled = false;
+      // Note: download still needs file, so show a subtle note
+      document.getElementById('dl-note').style.display = 'block';
+      return;
+    }
+  } catch(e) {}
+  // No stored data — show upload screen as normal
+});
 
-// ── Upload ───────────────────────────────────────────────────────────────────
-const fileInput  = document.getElementById('file-input');
-const dropZone   = document.getElementById('drop-zone');
-const fileChosen = document.getElementById('file-chosen');
-const loadBtn    = document.getElementById('load-btn');
-const uploadErr  = document.getElementById('upload-error');
+function loadFromRaw(rawSheets) {
+  sheets = {
+    clauses: rawSheets.clauses  || [],
+    terms:   rawSheets.terms    || [],
+    options: rawSheets.options  || [],
+    rules:   rawSheets.rules    || [],
+  };
+  hdrs = {
+    clauses: rawSheets.clauseHeaders || [],
+    terms:   rawSheets.termHeaders   || [],
+    options: rawSheets.optionHeaders || [],
+    rules:   rawSheets.ruleHeaders   || [],
+  };
+  updateCounts();
+  renderGrid();
+}
 
-function setFile(f) {
+// ── Upload (fallback if no sessionStorage data) ──────────────────────────────
+const fileInput = document.getElementById('file-input');
+const dropZone  = document.getElementById('drop-zone');
+const loadBtn   = document.getElementById('load-btn');
+const fnameEl   = document.getElementById('fname');
+const lerrEl    = document.getElementById('lerr');
+
+function pickFile(f) {
   if (!f) return;
   selectedFile = f;
-  fileChosen.textContent = '📄 ' + f.name;
-  fileChosen.style.display = 'block';
+  fnameEl.textContent = '📄 ' + f.name;
+  fnameEl.style.display = 'block';
   loadBtn.disabled = false;
-  loadBtn.textContent = 'Load & Edit →';
-  uploadErr.style.display = 'none';
+  lerrEl.style.display = 'none';
 }
-
-fileInput.addEventListener('change', e => setFile(e.target.files[0]));
+fileInput.addEventListener('change', e => pickFile(e.target.files[0]));
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); setFile(e.dataTransfer.files[0]); });
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); pickFile(e.dataTransfer.files[0]); });
 
-async function loadFile() {
-  if (!selectedFile) return;
+loadBtn.addEventListener('click', async () => {
   loadBtn.disabled = true;
-  loadBtn.textContent = 'Loading…';
-  uploadErr.style.display = 'none';
-  setStatus('Parsing file…');
-
+  loadBtn.textContent = 'Parsing…';
+  lerrEl.style.display = 'none';
   const fd = new FormData();
   fd.append('file', selectedFile);
-
   try {
-    const res = await fetch('/api/parse', { method: 'POST', body: fd });
+    const res  = await fetch('/api/parse', { method: 'POST', body: fd });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || 'Server error');
-
-    // Also fetch raw sheet data for the editor
-    const res2 = await fetch('/api/parse-editor', { method: 'POST', body: fd });
-    const json2 = await res2.json();
-    if (!res2.ok) throw new Error(json2.error || 'Editor parse error');
-
-    loadEditorData(json2);
-    document.getElementById('upload-prompt').style.display = 'none';
-    document.getElementById('editor-area').style.display = 'flex';
-    document.getElementById('download-btn').style.display = 'flex';
-    setStatus('Loaded ' + selectedFile.name, 'ok');
-  } catch (e) {
-    uploadErr.textContent = '⚠ ' + e.message;
-    uploadErr.style.display = 'block';
+    if (!json.rawSheets) throw new Error('Server did not return raw sheet data.');
+    try { sessionStorage.setItem('pmRawSheets', JSON.stringify(json.rawSheets)); } catch(e) {}
+    loadFromRaw(json.rawSheets);
+    document.getElementById('upload-screen').style.display = 'none';
+    document.getElementById('editor-screen').style.display = 'flex';
+    document.getElementById('dl-btn').disabled = false;
+  } catch(e) {
+    lerrEl.textContent = '⚠ ' + e.message;
+    lerrEl.style.display = 'block';
     loadBtn.disabled = false;
-    loadBtn.textContent = 'Load & Edit →';
-    setStatus('');
+    loadBtn.textContent = 'Load & Edit';
   }
-}
+});
 
-function loadEditorData(json) {
-  for (const key of ['clauses','terms','options']) {
-    rowData[key] = json[key].map(row => ({ _id: nextId++, ...row }));
-    renderTable(key);
+// ── Tabs / toolbar ──────────────────────────────────────────────────────────
+document.getElementById('back-btn').addEventListener('click', () => {
+  if (totalDirty() > 0 && !confirm('You have unsaved changes. Leave anyway?')) return;
+  window.location.href = '/';
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeTab = btn.dataset.tab;
+    filterQ = '';
+    document.getElementById('tsearch').value = '';
+    renderGrid();
+  });
+});
+
+document.getElementById('tsearch').addEventListener('input', e => {
+  filterQ = e.target.value.toLowerCase();
+  renderGrid(true);
+});
+
+document.getElementById('add-btn').addEventListener('click', () => {
+  const blank = {};
+  hdrs[activeTab].forEach(h => blank[h] = '');
+  sheets[activeTab].push(blank);
+  dirty[activeTab].add(sheets[activeTab].length - 1);
+  updateCounts();
+  updateBadge();
+  renderGrid();
+  setTimeout(() => { document.getElementById('grid-wrap').scrollTop = 999999; }, 50);
+});
+
+// ── Grid ───────────────────────────────────────────────────────────────────
+function renderGrid(filterOnly) {
+  const tab  = activeTab;
+  const rows = sheets[tab] || [];
+  const cols = hdrs[tab]   || [];
+  const kcs  = KEY_COLS[tab] || [];
+
+  const visible = filterQ
+    ? rows.map((r,i) => ({r,i})).filter(({r}) => Object.values(r).some(v => String(v).toLowerCase().includes(filterQ)))
+    : rows.map((r,i) => ({r,i}));
+
+  document.getElementById('rcnt').textContent = `${visible.length} / ${rows.length} rows`;
+
+  if (!cols.length) {
+    document.getElementById('grid-wrap').innerHTML = `<div style="padding:40px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text3)">No data available for this tab.</div>`;
+    return;
   }
-}
 
-// ── Table rendering ──────────────────────────────────────────────────────────
-function renderTable(key, filter = '') {
-  const { cols } = SHEETS[key];
-  const tbl = document.getElementById('tbl-' + key);
-  const rows = rowData[key];
-  const q = filter.toLowerCase();
+  let html = `<table class="grid"><thead><tr><th class="act-col"></th>`;
+  cols.forEach(c => { html += `<th title="${esc(c)}">${esc(c)}</th>`; });
+  html += `</tr></thead><tbody>`;
 
-  // Header
-  tbl.querySelector('thead').innerHTML = `<tr>
-    <th style="width:40px;text-align:center">#</th>
-    ${cols.map(c => `<th title="${esc(c)}">${esc(shortColName(c))}</th>`).join('')}
-    <th class="col-action">Del</th>
-  </tr>`;
-
-  // Body
-  const filtered = q
-    ? rows.filter(r => cols.some(c => String(r[c] || '').toLowerCase().includes(q)))
-    : rows;
-
-  tbl.querySelector('tbody').innerHTML = filtered.map((row, i) => `
-    <tr data-id="${row._id}" class="${row._new ? 'new-row' : ''}">
-      <td class="row-num">${i + 1}</td>
-      ${cols.map(c => `<td>${cellInput(row._id, c, row[c] || '')}</td>`).join('')}
-      <td class="col-action">
-        <button class="del-btn" onclick="deleteRow('${key}',${row._id})" title="Delete row">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-        </button>
-      </td>
-    </tr>`).join('');
-
-  // Auto-resize textareas
-  tbl.querySelectorAll('textarea').forEach(autoResize);
-  document.getElementById('tc-' + key).textContent = rows.length;
-}
-
-function cellInput(id, col, value) {
-  const v = esc(String(value));
-  const isLong = col.toLowerCase().includes('description') || col.toLowerCase().includes('comment') || col.toLowerCase().includes('name') || value.includes('\n');
-  if (isLong) {
-    return `<textarea rows="1" onchange="updateCell('${col}',${id},this.value)" oninput="autoResize(this)">${v}</textarea>`;
-  }
-  return `<input type="text" value="${v}" onchange="updateCell('${col}',${id},this.value)"/>`;
-}
-
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = el.scrollHeight + 'px';
-}
-
-function shortColName(col) {
-  const map = {
-    "Type of Field (User Entered, Drop Down or Radio Button or Contact or Other - Define Other)": "Field Type",
-    "Form Number and Edition (Informational Only)": "Form Number",
-    "Premium bearing? (as per PM)": "Premium Bearing",
-    "Business Rules (If Applicable)": "Business Rules",
-    "Business Rule (If Applicable)": "Business Rule",
-    "State Availbility as per SBT for (MI, NM, NV, KS, AZ, OK)": "State Availability (SBT)",
-    "Conditional Existence  as per SBT": "Conditional Existence",
-    "Option Description (to be displayed)": "Option Description",
-  };
-  return map[col] || col;
-}
-
-// ── Data mutation ────────────────────────────────────────────────────────────
-function updateCell(col, id, value) {
-  for (const key of ['clauses','terms','options']) {
-    const row = rowData[key].find(r => r._id === id);
-    if (row) { row[col] = value; return; }
-  }
-}
-
-function deleteRow(key, id) {
-  rowData[key] = rowData[key].filter(r => r._id !== id);
-  renderTable(key);
-  setStatus(`Row deleted`, 'ok');
-}
-
-function addRow(key) {
-  const { cols } = SHEETS[key];
-  const empty = { _id: nextId++, _new: true };
-  cols.forEach(c => empty[c] = '');
-  rowData[key].push(empty);
-  renderTable(key);
-  // Scroll to bottom of table
-  const wrap = document.querySelector(`#sec-${key} .table-wrap`);
-  wrap.scrollTop = wrap.scrollHeight;
-  setStatus('New row added — fill in the fields', 'ok');
-}
-
-function filterRows(key, q) {
-  renderTable(key, q);
-}
-
-// ── Tab switching ────────────────────────────────────────────────────────────
-function switchTab(key, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.sheet-section').forEach(s => s.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('sec-' + key).classList.add('active');
-}
-
-// ── Download ─────────────────────────────────────────────────────────────────
-async function downloadExcel() {
-  const dlBtn = document.getElementById('download-btn');
-  dlBtn.disabled = true;
-  setStatus('Generating Excel…');
-
-  const body = {
-    clauses:     rowData.clauses.map(r => stripMeta(r)),
-    terms:       rowData.terms.map(r => stripMeta(r)),
-    options:     rowData.options.map(r => stripMeta(r)),
-    clausesCols: SHEETS.clauses.cols,
-    termsCols:   SHEETS.terms.cols,
-    optionsCols: SHEETS.options.cols,
-  };
-
-  try {
-    const res = await fetch('/api/download', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+  visible.forEach(({r, i}) => {
+    const isNew = dirty[tab].has(i) && cols.every(c => !r[c]);
+    const cls   = isNew ? 'is-new' : dirty[tab].has(i) ? 'modified' : '';
+    html += `<tr class="${cls}" data-idx="${i}"><td class="act-col"><button class="del-btn" onclick="delRow(${i})" title="Delete">✕</button></td>`;
+    cols.forEach(c => {
+      const isKey = kcs.includes(c);
+      const v     = r[c] !== undefined ? String(r[c]) : '';
+      html += `<td><textarea class="ci${isKey?' kc':''}" data-idx="${i}" data-col="${esc(c)}" oninput="cellEdit(this)">${escTA(v)}</textarea></td>`;
     });
-    if (!res.ok) {
-      const json = await res.json();
-      throw new Error(json.error);
-    }
+    html += `</tr>`;
+  });
+
+  html += `</tbody></table>`;
+  document.getElementById('grid-wrap').innerHTML = html;
+  document.querySelectorAll('textarea.ci').forEach(fit);
+}
+
+function fit(ta) { ta.style.height = '0'; ta.style.height = ta.scrollHeight + 'px'; }
+
+window.cellEdit = function(ta) {
+  const idx = parseInt(ta.dataset.idx);
+  const col = ta.dataset.col;
+  sheets[activeTab][idx][col] = ta.value;
+  dirty[activeTab].add(idx);
+  const tr = ta.closest('tr');
+  if (tr && !tr.classList.contains('is-new')) tr.classList.add('modified');
+  fit(ta);
+  updateBadge();
+  // Keep sessionStorage in sync
+  try { sessionStorage.setItem('pmRawSheets', JSON.stringify({ clauses: sheets.clauses, clauseHeaders: hdrs.clauses, terms: sheets.terms, termHeaders: hdrs.terms, options: sheets.options, optionHeaders: hdrs.options, rules: sheets.rules, ruleHeaders: hdrs.rules })); } catch(e) {}
+};
+
+window.delRow = function(idx) {
+  if (!confirm('Delete this row?')) return;
+  sheets[activeTab].splice(idx, 1);
+  const nd = new Set();
+  dirty[activeTab].forEach(i => { if (i < idx) nd.add(i); else if (i > idx) nd.add(i-1); });
+  dirty[activeTab] = nd;
+  updateCounts();
+  updateBadge();
+  renderGrid();
+};
+
+function updateCounts() {
+  document.getElementById('cnt-clauses').textContent = (sheets.clauses || []).length;
+  document.getElementById('cnt-terms').textContent   = (sheets.terms   || []).length;
+  document.getElementById('cnt-options').textContent = (sheets.options  || []).length;
+  document.getElementById('cnt-rules').textContent   = (sheets.rules   || []).length;
+}
+
+function totalDirty() { return Object.values(dirty).reduce((a, s) => a + s.size, 0); }
+
+function updateBadge() {
+  const n = totalDirty();
+  const el = document.getElementById('change-badge');
+  el.style.display = n > 0 ? 'inline-block' : 'none';
+  if (n > 0) el.textContent = n + ' unsaved change' + (n !== 1 ? 's' : '');
+}
+
+// ── Download ───────────────────────────────────────────────────────────────
+document.getElementById('dl-btn').addEventListener('click', async () => {
+  // If we loaded from sessionStorage and have no file, prompt for it
+  if (!selectedFile) {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.xlsx,.xls';
+    input.onchange = async e => { selectedFile = e.target.files[0]; await doDownload(); };
+    input.click();
+    return;
+  }
+  await doDownload();
+});
+
+async function doDownload() {
+  const btn = document.getElementById('dl-btn');
+  btn.disabled = true; btn.textContent = 'Generating…';
+  const fd = new FormData();
+  fd.append('file', selectedFile);
+  fd.append('edits', JSON.stringify({ clauses: sheets.clauses, terms: sheets.terms, options: sheets.options, rules: sheets.rules }));
+  try {
+    const res = await fetch('/api/update', { method: 'POST', body: fd });
+    if (!res.ok) { const j = await res.json(); throw new Error(j.error || 'Server error'); }
     const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Product_Model_Updated.xlsx';
-    a.click();
-    URL.revokeObjectURL(url);
-    setStatus('Downloaded!', 'ok');
-  } catch (e) {
-    setStatus('Download failed: ' + e.message, 'err');
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'Product_Model_Updated.xlsx' });
+    a.click(); URL.revokeObjectURL(a.href);
+    dirty = { clauses: new Set(), terms: new Set(), options: new Set(), rules: new Set() };
+    updateBadge();
+  } catch(e) {
+    alert('Failed: ' + e.message);
   } finally {
-    dlBtn.disabled = false;
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Updated Excel`;
   }
 }
 
-function stripMeta(row) {
-  const out = { ...row };
-  delete out._id;
-  delete out._new;
-  return out;
-}
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
-function esc(s) {
-  return String(s || '')
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
-
-function setStatus(msg, type = '') {
-  const el = document.getElementById('status-msg');
-  el.textContent = msg;
-  el.className = 'status-msg' + (type ? ' ' + type : '');
-}
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escTA(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
 </html>

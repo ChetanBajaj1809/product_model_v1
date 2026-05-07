@@ -119,6 +119,7 @@ export default async function handler(req, res) {
       const { rows: clauses, headers: clauseHeaders }   = parseSheet(wb, clausesSheet);
       const { rows: terms,   headers: termHeaders }     = parseSheet(wb, termsSheet);
       const { rows: options, headers: optionHeaders }   = parseSheet(wb, optionsSheet);
+      const { rows: rulesRaw, headers: ruleHeadersRaw } = rulesSheet ? parseSheet(wb, rulesSheet) : { rows: [], headers: [] };
       const { rows: rules,   headers: ruleHeaders }     = parseSheet(wb, rulesSheet);
 
       // ── Resolve exact column keys ──────────────────────────────────────────
@@ -255,6 +256,17 @@ export default async function handler(req, res) {
 
       res.status(200).json({
         coverages,
+        // Raw sheet data for the editor (all columns, all rows)
+        rawSheets: {
+          clauses:       clauses,
+          clauseHeaders: clauseHeaders,
+          terms:         terms,
+          termHeaders:   termHeaders,
+          options:       options,
+          optionHeaders: optionHeaders,
+          rules:         rulesRaw,
+          ruleHeaders:   ruleHeadersRaw,
+        },
         meta: {
           sheets: { clausesSheet, termsSheet, optionsSheet },
           columns: { CL_CODE, T_REL_CLAUSE_CODE, T_CODE, O_REL_TERM_CODE, O_DESC },

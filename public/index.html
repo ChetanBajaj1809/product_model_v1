@@ -156,6 +156,7 @@
     <span class="hstat">Options <strong id="stat-opts">—</strong></span>
     <span class="hstat">Rules <strong id="stat-rules">—</strong></span>
     <button class="upload-new-btn" id="upload-new-btn">↑ New File</button>
+    <button class="upload-new-btn" id="edit-btn" style="color:var(--accent3);border-color:var(--accent3);" onclick="window.location.href='/editor.html'">✎ Edit Data</button>
     <button class="upload-new-btn" id="editor-btn" style="display:none;background:rgba(79,124,255,.12);border-color:rgba(79,124,255,.4);color:var(--accent)" onclick="openEditor()">✏ Edit Model</button>
   </div>
 </header>
@@ -280,6 +281,8 @@ uploadBtn.addEventListener('click', async () => {
 
     const { coverages, meta } = json;
     DATA = coverages;
+    // Store raw sheets for editor (avoid re-upload)
+    try { sessionStorage.setItem('pmRawSheets', JSON.stringify(json.rawSheets)); } catch(e) {}
 
     // Show detected sheets
     sheetsInfo.innerHTML = `Detected sheets: <span>${meta.sheets.clausesSheet}</span> · <span>${meta.sheets.termsSheet}</span> · <span>${meta.sheets.optionsSheet}</span> · <span>${meta.sheets.rulesSheet}</span>`;
@@ -298,6 +301,7 @@ uploadBtn.addEventListener('click', async () => {
 document.getElementById('upload-new-btn').addEventListener('click', () => {
   // Reset and show upload screen
   DATA = []; activeIdx = null;
+  try { sessionStorage.removeItem('pmRawSheets'); } catch(e) {}
   selectedFile = null;
   fileInput.value = '';
   filenameEl.style.display = 'none';
