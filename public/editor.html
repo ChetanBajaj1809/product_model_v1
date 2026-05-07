@@ -15,20 +15,26 @@
     --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;line-height:1.5;min-height:100vh;display:flex;flex-direction:column;}
+  html,body{height:100%;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;line-height:1.5;display:flex;flex-direction:column;}
 
-  header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:14px;height:56px;position:sticky;top:0;z-index:100;}
+  /* ── HEADER ── */
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:14px;height:56px;flex-shrink:0;z-index:50;}
   .logo{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;}
   .logo span{color:var(--text3);}
-  .back-btn{background:none;border:1px solid var(--border2);border-radius:5px;padding:5px 12px;color:var(--text2);font-size:11px;font-family:var(--sans);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;}
-  .back-btn:hover{border-color:var(--accent);color:var(--accent);}
-  .header-right{margin-left:auto;display:flex;gap:10px;align-items:center;}
-  .change-badge{font-family:var(--mono);font-size:10px;color:var(--accent4);background:rgba(244,164,66,.1);border:1px solid rgba(244,164,66,.2);border-radius:4px;padding:2px 8px;}
-  .dl-btn{background:var(--accent3);border:none;border-radius:6px;padding:7px 16px;color:#0d0f14;font-size:12px;font-weight:700;font-family:var(--sans);cursor:pointer;transition:opacity .15s;display:flex;align-items:center;gap:6px;}
-  .dl-btn:hover{opacity:.88;}
-  .dl-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .hbtn{background:none;border:1px solid var(--border2);border-radius:5px;padding:5px 14px;color:var(--text2);font-size:11px;font-family:var(--sans);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+  .hbtn:hover{border-color:var(--accent);color:var(--accent);}
+  .hbtn.save{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+  .hbtn.save:hover{opacity:.9;}
+  .hbtn.save:disabled{opacity:.4;cursor:not-allowed;}
+  .hbtn.dl{background:var(--accent3);border-color:var(--accent3);color:#0d0f14;font-weight:700;}
+  .hbtn.dl:hover{opacity:.88;}
+  .hbtn.dl:disabled{opacity:.4;cursor:not-allowed;}
+  .header-right{margin-left:auto;display:flex;gap:8px;align-items:center;}
+  .change-badge{font-family:var(--mono);font-size:10px;color:var(--accent4);background:rgba(244,164,66,.1);border:1px solid rgba(244,164,66,.2);border-radius:4px;padding:2px 8px;white-space:nowrap;}
+  .saved-badge{font-family:var(--mono);font-size:10px;color:var(--accent3);background:rgba(40,201,143,.1);border:1px solid rgba(40,201,143,.2);border-radius:4px;padding:2px 8px;display:none;}
 
-  /* UPLOAD */
+  /* ── UPLOAD SCREEN ── */
   #upload-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;}
   .ucard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:40px;max-width:460px;width:100%;text-align:center;}
   .ucard h2{font-size:18px;font-weight:700;margin-bottom:8px;}
@@ -44,11 +50,15 @@
   .load-btn:disabled{opacity:.4;cursor:not-allowed;}
   .lerr{margin-top:10px;font-size:12px;color:var(--danger);display:none;}
 
-  /* EDITOR */
-  #editor-screen{display:none;flex:1;flex-direction:column;overflow:hidden;height:calc(100vh - 56px);}
+  /* ── EDITOR SCREEN ──
+     KEY FIX: use a normal block layout instead of flex+overflow:hidden.
+     Tab bar, toolbar, and grid all stack naturally.
+     Grid gets its own fixed height so it scrolls independently. */
+  #editor-screen{display:none;flex-direction:column;flex:1;min-height:0;}
 
-  .tab-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 24px;}
-  .tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:13px 18px;font-family:var(--sans);font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .tab-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 24px;flex-shrink:0;overflow-x:auto;}
+  .tab-bar::-webkit-scrollbar{height:0;}
+  .tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:13px 18px;font-family:var(--sans);font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;}
   .tab-btn:hover{color:var(--text2);}
   .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
   .tcnt{font-family:var(--mono);font-size:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1px 6px;margin-left:5px;color:var(--text3);}
@@ -61,60 +71,96 @@
   .tsearch::placeholder{color:var(--text3);}
   .rcnt{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--text3);}
 
-  .grid-wrap{flex:1;overflow:auto;}
-  .grid-wrap::-webkit-scrollbar{width:5px;height:5px;}
+  /* ── GRID ──
+     KEY FIX: overflow:auto in BOTH directions, width:100%, and table uses
+     width:max-content so it grows past the viewport and the scrollbar appears. */
+  .grid-wrap{
+    overflow:auto;
+    flex:1;
+    min-height:0;
+    /* Always show horizontal scrollbar so user knows there's more content */
+    scrollbar-gutter:stable;
+  }
+  .grid-wrap::-webkit-scrollbar{width:8px;height:8px;}
+  .grid-wrap::-webkit-scrollbar-track{background:var(--surface2);}
   .grid-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+  .grid-wrap::-webkit-scrollbar-corner{background:var(--surface2);}
 
-  table.grid{border-collapse:collapse;width:max-content;min-width:100%;}
+  table.grid{border-collapse:collapse;table-layout:fixed;width:max-content;min-width:100%;}
   table.grid thead{position:sticky;top:0;z-index:5;}
   table.grid th{
     background:var(--surface2);border-right:1px solid var(--border);border-bottom:2px solid var(--border2);
-    padding:7px 10px;font-family:var(--mono);font-size:9px;font-weight:600;text-transform:uppercase;
+    padding:8px 12px;font-family:var(--mono);font-size:9px;font-weight:600;text-transform:uppercase;
     letter-spacing:.07em;color:var(--text3);white-space:nowrap;text-align:left;
-    min-width:130px;max-width:240px;user-select:none;
+    width:180px;user-select:none;position:relative;
   }
-  table.grid th.act-col{min-width:36px;max-width:36px;width:36px;}
-  table.grid tbody tr:hover{background:rgba(255,255,255,.02);}
-  table.grid tbody tr.modified{background:rgba(244,164,66,.04);}
-  table.grid tbody tr.is-new{background:rgba(40,201,143,.04);}
+  table.grid th.act-col{width:40px;min-width:40px;}
+  /* Wide columns for description/text fields */
+  table.grid th.wide{width:280px;}
+  table.grid tbody tr:hover td{background:rgba(255,255,255,.015);}
+  table.grid tbody tr.modified td{background:rgba(244,164,66,.04);}
+  table.grid tbody tr.is-new td{background:rgba(40,201,143,.04);}
   table.grid td{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:0;vertical-align:top;}
-  table.grid td.act-col{text-align:center;padding:4px;vertical-align:middle;}
+  table.grid td.act-col{text-align:center;padding:4px;vertical-align:middle;width:40px;}
 
   textarea.ci{
     display:block;width:100%;background:transparent;border:none;outline:none;
-    padding:6px 10px;font-size:12px;font-family:var(--sans);color:var(--text);
-    resize:none;overflow:hidden;line-height:1.45;min-height:32px;
+    padding:7px 10px;font-size:12px;font-family:var(--sans);color:var(--text);
+    resize:none;overflow:hidden;line-height:1.45;min-height:34px;
   }
-  textarea.ci:focus{background:rgba(79,124,255,.07);box-shadow:inset 0 0 0 1px var(--accent);}
+  textarea.ci:focus{background:rgba(79,124,255,.07);box-shadow:inset 0 0 0 1.5px var(--accent);}
   textarea.ci.kc{font-family:var(--mono);font-size:10px;color:var(--accent3);}
 
-  .del-btn{background:none;border:none;color:var(--text3);cursor:pointer;padding:3px 6px;border-radius:3px;font-size:12px;transition:all .15s;}
+  .del-btn{background:none;border:none;color:var(--text3);cursor:pointer;padding:4px 7px;border-radius:3px;font-size:12px;transition:all .15s;}
   .del-btn:hover{background:rgba(255,79,107,.12);color:var(--danger);}
+
+  /* ── DOWNLOAD MODAL ── */
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200;display:none;}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:36px;max-width:420px;width:100%;text-align:center;}
+  .modal h3{font-size:16px;font-weight:700;margin-bottom:8px;}
+  .modal p{color:var(--text3);font-size:13px;margin-bottom:24px;line-height:1.6;}
+  .modal-drop{border:2px dashed var(--border2);border-radius:8px;padding:20px;cursor:pointer;transition:all .2s;position:relative;margin-bottom:16px;}
+  .modal-drop:hover,.modal-drop.drag-over{border-color:var(--accent3);background:rgba(40,201,143,.04);}
+  .modal-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .modal-drop-text{color:var(--text2);font-size:12px;pointer-events:none;}
+  .modal-drop-text strong{color:var(--accent3);}
+  .modal-fname{margin-bottom:14px;font-family:var(--mono);font-size:11px;color:var(--accent3);display:none;}
+  .modal-btns{display:flex;gap:10px;}
+  .modal-cancel{flex:1;background:none;border:1px solid var(--border2);border-radius:7px;padding:9px;color:var(--text2);font-family:var(--sans);font-size:12px;cursor:pointer;}
+  .modal-cancel:hover{border-color:var(--text2);}
+  .modal-dl{flex:2;background:var(--accent3);border:none;border-radius:7px;padding:9px;color:#0d0f14;font-weight:700;font-family:var(--sans);font-size:12px;cursor:pointer;}
+  .modal-dl:hover{opacity:.88;}
+  .modal-dl:disabled{opacity:.4;cursor:not-allowed;}
+  .modal-err{margin-top:10px;font-size:11px;color:var(--danger);display:none;}
 </style>
 </head>
 <body>
 
 <header>
-  <button class="back-btn" id="back-btn">
+  <button class="hbtn" id="back-btn">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
     Explorer
   </button>
   <div class="logo">PM<span>/</span>Editor</div>
   <div class="header-right">
     <span class="change-badge" id="change-badge" style="display:none"></span>
-    
-    <span id="dl-note" style="display:none;font-family:var(--mono);font-size:10px;color:var(--text3)">You'll be prompted to re-select your file to download</span>
-    <button class="dl-btn" id="dl-btn" disabled>
+    <span class="saved-badge" id="saved-badge">✓ Saved — ready to download</span>
+    <button class="hbtn save" id="save-btn" disabled>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Save
+    </button>
+    <button class="hbtn dl" id="dl-btn" disabled>
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Download Updated Excel
+      Download Excel
     </button>
   </div>
 </header>
 
+<!-- UPLOAD SCREEN -->
 <div id="upload-screen">
   <div class="ucard">
     <h2>Load Product Model</h2>
-    <p>Upload your Excel file to edit clauses, terms and options, then download the updated file.</p>
+    <p>Upload your Excel file to edit clauses, terms, options and business rules.</p>
     <div class="drop-zone" id="drop-zone">
       <input type="file" id="file-input" accept=".xlsx,.xls"/>
       <div class="dzt"><strong>Click to browse</strong> or drag & drop</div>
@@ -126,11 +172,12 @@
   </div>
 </div>
 
+<!-- EDITOR SCREEN -->
 <div id="editor-screen">
-  <div class="tab-bar">
-    <button class="tab-btn active" data-tab="clauses">Clauses - Small Business <span class="tcnt" id="cnt-clauses">0</span></button>
-    <button class="tab-btn" data-tab="terms">Terms - Small Business <span class="tcnt" id="cnt-terms">0</span></button>
-    <button class="tab-btn" data-tab="options">Options - Small Business <span class="tcnt" id="cnt-options">0</span></button>
+  <div class="tab-bar" id="tab-bar">
+    <button class="tab-btn active" data-tab="clauses">Clauses <span class="tcnt" id="cnt-clauses">0</span></button>
+    <button class="tab-btn" data-tab="terms">Terms <span class="tcnt" id="cnt-terms">0</span></button>
+    <button class="tab-btn" data-tab="options">Options <span class="tcnt" id="cnt-options">0</span></button>
     <button class="tab-btn" data-tab="rules">PM Business Rules <span class="tcnt" id="cnt-rules">0</span></button>
   </div>
   <div class="toolbar">
@@ -144,12 +191,32 @@
   <div class="grid-wrap" id="grid-wrap"></div>
 </div>
 
+<!-- DOWNLOAD MODAL -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h3>Download Updated Excel</h3>
+    <p>Select your original Excel file — your edits will be written into the correct sheets and a new file will download.</p>
+    <div class="modal-drop" id="modal-drop">
+      <input type="file" id="modal-file" accept=".xlsx,.xls"/>
+      <div class="modal-drop-text"><strong>Click to select</strong> or drag your Excel here</div>
+    </div>
+    <div class="modal-fname" id="modal-fname"></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" id="modal-cancel">Cancel</button>
+      <button class="modal-dl" id="modal-dl" disabled>Download</button>
+    </div>
+    <div class="modal-err" id="modal-err"></div>
+  </div>
+</div>
+
 <script>
 // ── State ──────────────────────────────────────────────────────────────────
-let selectedFile = null;
+let selectedFile  = null;   // file from upload screen (if user uploaded here)
+let modalFile     = null;   // file selected in download modal
 let sheets = {};
 let hdrs   = {};
 let dirty  = { clauses: new Set(), terms: new Set(), options: new Set(), rules: new Set() };
+let saved  = false;         // true after Save is clicked
 let activeTab = 'clauses';
 let filterQ   = '';
 
@@ -159,44 +226,34 @@ const KEY_COLS = {
   options: ['Related Clause Term Code', 'Term Code'],
   rules:   ['Business Rule Number'],
 };
+const WIDE_COLS = ['Description', 'Rule Description', 'Condition', 'Rule Output', 'Business Rule Name', 'BA/SME', 'Comment', 'Coverage Availibility'];
 
-// ── On load: check sessionStorage for already-parsed data ──────────────────
+// ── On load: check sessionStorage ─────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   try {
     const stored = sessionStorage.getItem('pmRawSheets');
     if (stored) {
-      const rawSheets = JSON.parse(stored);
-      loadFromRaw(rawSheets);
-      // Hide upload screen immediately - no file re-upload needed
-      document.getElementById('upload-screen').style.display = 'none';
-      document.getElementById('editor-screen').style.display = 'flex';
-      document.getElementById('dl-btn').disabled = false;
-      // Note: download still needs file, so show a subtle note
-      document.getElementById('dl-note').style.display = 'block';
+      loadFromRaw(JSON.parse(stored));
+      showEditor();
       return;
     }
   } catch(e) {}
-  // No stored data — show upload screen as normal
 });
 
-function loadFromRaw(rawSheets) {
-  sheets = {
-    clauses: rawSheets.clauses  || [],
-    terms:   rawSheets.terms    || [],
-    options: rawSheets.options  || [],
-    rules:   rawSheets.rules    || [],
-  };
-  hdrs = {
-    clauses: rawSheets.clauseHeaders || [],
-    terms:   rawSheets.termHeaders   || [],
-    options: rawSheets.optionHeaders || [],
-    rules:   rawSheets.ruleHeaders   || [],
-  };
+function loadFromRaw(raw) {
+  sheets = { clauses: raw.clauses||[], terms: raw.terms||[], options: raw.options||[], rules: raw.rules||[] };
+  hdrs   = { clauses: raw.clauseHeaders||[], terms: raw.termHeaders||[], options: raw.optionHeaders||[], rules: raw.ruleHeaders||[] };
   updateCounts();
   renderGrid();
 }
 
-// ── Upload (fallback if no sessionStorage data) ──────────────────────────────
+function showEditor() {
+  document.getElementById('upload-screen').style.display  = 'none';
+  document.getElementById('editor-screen').style.display  = 'flex';
+  document.getElementById('save-btn').disabled = false;
+}
+
+// ── Upload (fallback) ──────────────────────────────────────────────────────
 const fileInput = document.getElementById('file-input');
 const dropZone  = document.getElementById('drop-zone');
 const loadBtn   = document.getElementById('load-btn');
@@ -217,11 +274,8 @@ dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-ove
 dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); pickFile(e.dataTransfer.files[0]); });
 
 loadBtn.addEventListener('click', async () => {
-  loadBtn.disabled = true;
-  loadBtn.textContent = 'Parsing…';
-  lerrEl.style.display = 'none';
-  const fd = new FormData();
-  fd.append('file', selectedFile);
+  loadBtn.disabled = true; loadBtn.textContent = 'Parsing…'; lerrEl.style.display = 'none';
+  const fd = new FormData(); fd.append('file', selectedFile);
   try {
     const res  = await fetch('/api/parse', { method: 'POST', body: fd });
     const json = await res.json();
@@ -229,52 +283,70 @@ loadBtn.addEventListener('click', async () => {
     if (!json.rawSheets) throw new Error('Server did not return raw sheet data.');
     try { sessionStorage.setItem('pmRawSheets', JSON.stringify(json.rawSheets)); } catch(e) {}
     loadFromRaw(json.rawSheets);
-    document.getElementById('upload-screen').style.display = 'none';
-    document.getElementById('editor-screen').style.display = 'flex';
-    document.getElementById('dl-btn').disabled = false;
+    showEditor();
   } catch(e) {
-    lerrEl.textContent = '⚠ ' + e.message;
-    lerrEl.style.display = 'block';
-    loadBtn.disabled = false;
-    loadBtn.textContent = 'Load & Edit';
+    lerrEl.textContent = '⚠ ' + e.message; lerrEl.style.display = 'block';
+    loadBtn.disabled = false; loadBtn.textContent = 'Load & Edit';
   }
 });
 
-// ── Tabs / toolbar ──────────────────────────────────────────────────────────
+// ── Navigation ─────────────────────────────────────────────────────────────
 document.getElementById('back-btn').addEventListener('click', () => {
-  if (totalDirty() > 0 && !confirm('You have unsaved changes. Leave anyway?')) return;
+  if (totalDirty() > 0 && !saved && !confirm('You have unsaved changes. Leave anyway?')) return;
   window.location.href = '/';
 });
 
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeTab = btn.dataset.tab;
-    filterQ = '';
-    document.getElementById('tsearch').value = '';
-    renderGrid();
-  });
+// Tab clicks — attached to tab-bar to avoid any z-index issues
+document.getElementById('tab-bar').addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeTab = btn.dataset.tab;
+  filterQ = '';
+  document.getElementById('tsearch').value = '';
+  renderGrid();
 });
 
 document.getElementById('tsearch').addEventListener('input', e => {
   filterQ = e.target.value.toLowerCase();
-  renderGrid(true);
+  renderGrid();
 });
 
 document.getElementById('add-btn').addEventListener('click', () => {
-  const blank = {};
-  hdrs[activeTab].forEach(h => blank[h] = '');
+  const blank = {}; hdrs[activeTab].forEach(h => blank[h] = '');
   sheets[activeTab].push(blank);
   dirty[activeTab].add(sheets[activeTab].length - 1);
-  updateCounts();
-  updateBadge();
-  renderGrid();
+  saved = false;
+  updateCounts(); updateBadge(); renderGrid();
   setTimeout(() => { document.getElementById('grid-wrap').scrollTop = 999999; }, 50);
 });
 
+// ── Save ───────────────────────────────────────────────────────────────────
+document.getElementById('save-btn').addEventListener('click', () => {
+  // Persist to sessionStorage
+  try {
+    sessionStorage.setItem('pmRawSheets', JSON.stringify({
+      clauses: sheets.clauses, clauseHeaders: hdrs.clauses,
+      terms: sheets.terms,     termHeaders: hdrs.terms,
+      options: sheets.options, optionHeaders: hdrs.options,
+      rules: sheets.rules,     ruleHeaders: hdrs.rules,
+    }));
+  } catch(e) {}
+
+  saved = true;
+  dirty = { clauses: new Set(), terms: new Set(), options: new Set(), rules: new Set() };
+  updateBadge();
+
+  // Show saved badge briefly, then reveal Download button
+  const savedBadge = document.getElementById('saved-badge');
+  savedBadge.style.display = 'inline-block';
+  document.getElementById('dl-btn').disabled = false;
+  setTimeout(() => { savedBadge.style.display = 'none'; }, 3000);
+});
+
 // ── Grid ───────────────────────────────────────────────────────────────────
-function renderGrid(filterOnly) {
+function renderGrid() {
   const tab  = activeTab;
   const rows = sheets[tab] || [];
   const cols = hdrs[tab]   || [];
@@ -287,21 +359,24 @@ function renderGrid(filterOnly) {
   document.getElementById('rcnt').textContent = `${visible.length} / ${rows.length} rows`;
 
   if (!cols.length) {
-    document.getElementById('grid-wrap').innerHTML = `<div style="padding:40px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text3)">No data available for this tab.</div>`;
+    document.getElementById('grid-wrap').innerHTML = `<div style="padding:40px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text3)">No data for this tab.</div>`;
     return;
   }
 
   let html = `<table class="grid"><thead><tr><th class="act-col"></th>`;
-  cols.forEach(c => { html += `<th title="${esc(c)}">${esc(c)}</th>`; });
+  cols.forEach(c => {
+    const isWide = WIDE_COLS.some(w => c.toLowerCase().includes(w.toLowerCase()));
+    html += `<th class="${isWide?'wide':''}" title="${esc(c)}">${esc(c)}</th>`;
+  });
   html += `</tr></thead><tbody>`;
 
   visible.forEach(({r, i}) => {
     const isNew = dirty[tab].has(i) && cols.every(c => !r[c]);
     const cls   = isNew ? 'is-new' : dirty[tab].has(i) ? 'modified' : '';
-    html += `<tr class="${cls}" data-idx="${i}"><td class="act-col"><button class="del-btn" onclick="delRow(${i})" title="Delete">✕</button></td>`;
+    html += `<tr class="${cls}" data-idx="${i}"><td class="act-col"><button class="del-btn" onclick="delRow(${i})" title="Delete row">✕</button></td>`;
     cols.forEach(c => {
       const isKey = kcs.includes(c);
-      const v     = r[c] !== undefined ? String(r[c]) : '';
+      const v = r[c] !== undefined ? String(r[c]) : '';
       html += `<td><textarea class="ci${isKey?' kc':''}" data-idx="${i}" data-col="${esc(c)}" oninput="cellEdit(this)">${escTA(v)}</textarea></td>`;
     });
     html += `</tr>`;
@@ -319,12 +394,12 @@ window.cellEdit = function(ta) {
   const col = ta.dataset.col;
   sheets[activeTab][idx][col] = ta.value;
   dirty[activeTab].add(idx);
+  saved = false;
+  document.getElementById('dl-btn').disabled = true;
   const tr = ta.closest('tr');
   if (tr && !tr.classList.contains('is-new')) tr.classList.add('modified');
   fit(ta);
   updateBadge();
-  // Keep sessionStorage in sync
-  try { sessionStorage.setItem('pmRawSheets', JSON.stringify({ clauses: sheets.clauses, clauseHeaders: hdrs.clauses, terms: sheets.terms, termHeaders: hdrs.terms, options: sheets.options, optionHeaders: hdrs.options, rules: sheets.rules, ruleHeaders: hdrs.rules })); } catch(e) {}
 };
 
 window.delRow = function(idx) {
@@ -333,59 +408,86 @@ window.delRow = function(idx) {
   const nd = new Set();
   dirty[activeTab].forEach(i => { if (i < idx) nd.add(i); else if (i > idx) nd.add(i-1); });
   dirty[activeTab] = nd;
-  updateCounts();
-  updateBadge();
-  renderGrid();
+  saved = false;
+  document.getElementById('dl-btn').disabled = true;
+  updateCounts(); updateBadge(); renderGrid();
 };
 
 function updateCounts() {
-  document.getElementById('cnt-clauses').textContent = (sheets.clauses || []).length;
-  document.getElementById('cnt-terms').textContent   = (sheets.terms   || []).length;
-  document.getElementById('cnt-options').textContent = (sheets.options  || []).length;
-  document.getElementById('cnt-rules').textContent   = (sheets.rules   || []).length;
+  ['clauses','terms','options','rules'].forEach(t => {
+    document.getElementById('cnt-'+t).textContent = (sheets[t]||[]).length;
+  });
 }
 
-function totalDirty() { return Object.values(dirty).reduce((a, s) => a + s.size, 0); }
+function totalDirty() { return Object.values(dirty).reduce((a,s) => a+s.size, 0); }
 
 function updateBadge() {
   const n = totalDirty();
   const el = document.getElementById('change-badge');
   el.style.display = n > 0 ? 'inline-block' : 'none';
-  if (n > 0) el.textContent = n + ' unsaved change' + (n !== 1 ? 's' : '');
+  if (n > 0) el.textContent = n + ' unsaved change' + (n!==1?'s':'');
 }
 
-// ── Download ───────────────────────────────────────────────────────────────
-document.getElementById('dl-btn').addEventListener('click', async () => {
-  // If we loaded from sessionStorage and have no file, prompt for it
-  if (!selectedFile) {
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = '.xlsx,.xls';
-    input.onchange = async e => { selectedFile = e.target.files[0]; await doDownload(); };
-    input.click();
-    return;
-  }
-  await doDownload();
+// ── Download modal ─────────────────────────────────────────────────────────
+document.getElementById('dl-btn').addEventListener('click', () => {
+  // If we have the original file already (uploaded in this session), skip modal
+  if (selectedFile) { doDownload(selectedFile); return; }
+  // Otherwise show modal to pick the file
+  modalFile = null;
+  document.getElementById('modal-fname').style.display = 'none';
+  document.getElementById('modal-dl').disabled = true;
+  document.getElementById('modal-err').style.display = 'none';
+  document.getElementById('modal-bg').style.display = 'flex';
 });
 
-async function doDownload() {
+document.getElementById('modal-cancel').addEventListener('click', () => {
+  document.getElementById('modal-bg').style.display = 'none';
+});
+document.getElementById('modal-bg').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-bg')) document.getElementById('modal-bg').style.display = 'none';
+});
+
+const modalDrop = document.getElementById('modal-drop');
+const modalFileInput = document.getElementById('modal-file');
+modalFileInput.addEventListener('change', e => setModalFile(e.target.files[0]));
+modalDrop.addEventListener('dragover', e => { e.preventDefault(); modalDrop.classList.add('drag-over'); });
+modalDrop.addEventListener('dragleave', () => modalDrop.classList.remove('drag-over'));
+modalDrop.addEventListener('drop', e => { e.preventDefault(); modalDrop.classList.remove('drag-over'); setModalFile(e.dataTransfer.files[0]); });
+
+function setModalFile(f) {
+  if (!f) return;
+  modalFile = f;
+  const el = document.getElementById('modal-fname');
+  el.textContent = '📄 ' + f.name; el.style.display = 'block';
+  document.getElementById('modal-dl').disabled = false;
+}
+
+document.getElementById('modal-dl').addEventListener('click', async () => {
+  if (!modalFile) return;
+  document.getElementById('modal-bg').style.display = 'none';
+  await doDownload(modalFile);
+});
+
+async function doDownload(file) {
   const btn = document.getElementById('dl-btn');
   btn.disabled = true; btn.textContent = 'Generating…';
+
   const fd = new FormData();
-  fd.append('file', selectedFile);
+  fd.append('file', file);
   fd.append('edits', JSON.stringify({ clauses: sheets.clauses, terms: sheets.terms, options: sheets.options, rules: sheets.rules }));
+
   try {
     const res = await fetch('/api/update', { method: 'POST', body: fd });
-    if (!res.ok) { const j = await res.json(); throw new Error(j.error || 'Server error'); }
+    if (!res.ok) { const j = await res.json(); throw new Error(j.error||'Server error'); }
     const blob = await res.blob();
     const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'Product_Model_Updated.xlsx' });
     a.click(); URL.revokeObjectURL(a.href);
-    dirty = { clauses: new Set(), terms: new Set(), options: new Set(), rules: new Set() };
-    updateBadge();
   } catch(e) {
-    alert('Failed: ' + e.message);
-  } finally {
+    alert('Download failed: ' + e.message);
     btn.disabled = false;
-    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Updated Excel`;
+  } finally {
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Excel`;
+    btn.disabled = false;
   }
 }
 
