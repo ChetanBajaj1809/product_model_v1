@@ -1,0 +1,12 @@
+{
+  "name": "pm-explorer",
+  "version": "1.0.0",
+  "description": "Product Model Explorer — Small Business Coverage Viewer",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5",
+    "formidable": "^3.5.1"
+  }
+}
